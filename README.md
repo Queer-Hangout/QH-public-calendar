@@ -147,7 +147,7 @@ When all is deployed successfully, run the whole thing using the following comma
 
 `aws lambda invoke --function-name=garmeres-calendar-sync-lambda --log-type=Tail function_out.json`
 
-The response, along with any possible errors, will be printed to the file `function_out.txt`.
+The response, along with any possible errors, will be printed to the file `function_out.json`.
 
 ## Architecture
 
