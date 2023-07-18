@@ -3,8 +3,16 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# CDK asset staging directory
+.cdk.staging
+cdk.out
+function_out.json
+
 # C extensions
 *.so
+
+.DS_Store
+.idea
 
 # Distribution / packaging
 .Python
