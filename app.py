@@ -13,9 +13,13 @@ required_env_vars = [
     "AWS_DEFAULT_REGION",
     "CALENDAR_LINK",
     "PROJECT_NAME",
+    "DOMAIN_NAME",
+    "CORS_ALLOWED_DOMAIN"
 ]
 
 default_optional_env_vars = {
+    "ENABLE_CORS_ALLOWED_SECONDARY_DOMAIN": str(False),
+    "CORS_ALLOWED_SECONDARY_DOMAIN": "http://localhost:8000",
     "EVENTS_PER_PAGE": "10"
 }
 

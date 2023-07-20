@@ -92,7 +92,16 @@ PROJECT_NAME=garmeres-calendar-sync
 # (Required) The domain you will be using for the distribution
 DOMAIN_NAME=events.api.garmeres.com
 
-# Max number of events contained in a single page (default: 10)
+# (Required) The CORS allowed domain, i.e. the domain of the frontend which will be fetching data from the distribution
+CORS_ALLOWED_DOMAIN=https://garmeres.com
+
+# (Optional) Whether a secondary domain should be allowed. Must be either "True" or "False". (default: False)
+ENABLE_CORS_ALLOWED_SECONDARY_DOMAIN=True
+
+# (Optional) Secondary CORS allowed domain
+CORS_ALLOWED_SECONDARY_DOMAIN=http://localhost:8000
+
+# (Optional) Max number of events contained in a single page (default: 10)
 EVENTS_PER_PAGE=10
 ```
 
