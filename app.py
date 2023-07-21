@@ -20,6 +20,7 @@ required_env_vars = [
 default_optional_env_vars = {
     "ENABLE_CORS_ALLOWED_SECONDARY_DOMAIN": str(False),
     "CORS_ALLOWED_SECONDARY_DOMAIN": "http://localhost:8000",
+    "TZ": "Europe/Oslo",
     "EVENTS_PER_PAGE": "10"
 }
 

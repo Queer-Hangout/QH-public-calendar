@@ -101,6 +101,9 @@ ENABLE_CORS_ALLOWED_SECONDARY_DOMAIN=True
 # (Optional) Secondary CORS allowed domain
 CORS_ALLOWED_SECONDARY_DOMAIN=http://localhost:8000
 
+# (Optional) Override the default AWS timezone variable (default: Europe/Oslo)
+TZ=Europe/Oslo
+
 # (Optional) Max number of events contained in a single page (default: 10)
 EVENTS_PER_PAGE=10
 ```

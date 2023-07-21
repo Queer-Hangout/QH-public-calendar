@@ -60,6 +60,7 @@ class FuncStack(Stack):
                 "DISTRIBUTION_ID": distribution.distribution_id,
                 "BUCKET_NAME": bucket.bucket_name,
                 "EVENTS_PER_PAGE": environ["EVENTS_PER_PAGE"],
+                "TZ": environ["TZ"]
             }
         )
 

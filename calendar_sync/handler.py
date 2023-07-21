@@ -1,6 +1,6 @@
 import urllib.request as request
 import pandas
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 import recurring_ical_events
 from dateutil.relativedelta import relativedelta
 import icalendar
@@ -19,7 +19,7 @@ def fetch_ical_string() -> str:
 def parse_event(event) -> [str]:
     start: datetime = event["DTSTART"].dt
     end: datetime = event["DTEND"].dt
-    duration: timedelta = end - start
+    duration: pandas.Timedelta = pandas.Timedelta(end - start)
     try:
         description: str = event["DESCRIPTION"]
     except KeyError:
@@ -33,7 +33,7 @@ def parse_event(event) -> [str]:
         description,
         str(start.isoformat()),
         str(end.isoformat()),
-        str(duration),
+        str(duration.isoformat()),
         location
     ]
 
