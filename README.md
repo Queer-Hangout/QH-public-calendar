@@ -1,11 +1,10 @@
-# Garmeres public event calendar
+# Queer Hangout public event calendar
 
 This repo is the source code for AWS infrastructure responsible for hosting an endpoint serving a list of upcoming
-public events as defined in an internal Nextcloud calendar.
+public events as defined in a public Google Calendar.
 
-In other words, when Garmeres members with access to [Balve](https://balve.garmeres.com) update a calendar named
-"Garmeres - Public", then this calendar's list of upcoming events will be served as json format from
-https://events.api.garmeres.com
+In other words, when a certain Google Calendar is updated, then this calendar's list of upcoming events will be served as json format from
+https://events.api.queerhangout.no
 
 ## API
 
@@ -87,13 +86,13 @@ AWS_DEFAULT_REGION=eu-north-1
 CALENDAR_LINK=
 
 # (Required) Globally unique name for the project. Prefix for all created resource names.
-PROJECT_NAME=garmeres-calendar-sync
+PROJECT_NAME=queer-hangout-calendar-sync
 
 # (Required) The domain you will be using for the distribution
-DOMAIN_NAME=events.api.garmeres.com
+DOMAIN_NAME=events.api.queerhangout.no
 
 # (Required) The CORS allowed domain, i.e. the domain of the frontend which will be fetching data from the distribution
-CORS_ALLOWED_DOMAIN=https://garmeres.com
+CORS_ALLOWED_DOMAIN=https://queerhangout.no
 
 # (Optional) Whether a secondary domain should be allowed. Must be either "True" or "False". (default: False)
 ENABLE_CORS_ALLOWED_SECONDARY_DOMAIN=True
@@ -157,13 +156,13 @@ url from the distribution output.
 
 When all is deployed successfully, run the whole thing using the following command:
 
-`aws lambda invoke --function-name=garmeres-calendar-sync-lambda --log-type=Tail function_out.json`
+`aws lambda invoke --function-name=queer-hangout-calendar-sync-lambda --log-type=Tail function_out.json`
 
 The response, along with any possible errors, will be printed to the file `function_out.json`.
 
 ## Architecture
 
-Nextcloud Calendar offers an endpoint to export a given calendar. To reduce network traffic in Balve, the calendar shall
+Google Calendar offers an endpoint to export a given calendar. To reduce network traffic to Google API, the calendar shall
 be exported once every 24 hours, processed into a list of events in JSON format and stored in an AWS S3 bucket. An AWS
 CloudFront distribution will be created from this S3 bucket to reduce costs of requests. The website may then fetch a
 list of events directly from the CloudFront distribution.
