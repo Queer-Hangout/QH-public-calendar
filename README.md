@@ -112,6 +112,10 @@ EVENTS_PER_PAGE=10
 Run `aws configure`. Enter your credentials for programmatic access, set the default region to `eu-north-1`, and the
 default output format to `yaml`.
 
+### Install project dependencies
+
+Run `pip install -r requirements.txt`
+
 ### Bootstrapping for CloudFormation
 
 Run
@@ -119,10 +123,6 @@ Run
 - `cdk bootstrap aws://ACCOUNT-NUMBER/eu-north-1`.
 
 This will create a CDK toolkit CloudFormation stack with all the required resources for CDK.
-
-### Install project dependencies
-
-Run `pip install -r requirements.txt`
 
 ### Run Docker
 
