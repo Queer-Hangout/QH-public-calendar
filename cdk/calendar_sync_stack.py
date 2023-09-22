@@ -9,33 +9,43 @@ from aws_cdk import (
     aws_s3 as s3,
     aws_cloudfront as cf,
     aws_events as events,
-    aws_events_targets as targets
+    aws_events_targets as targets,
+    aws_sns as sns,
+    RemovalPolicy
 )
 
 
-class FuncStack(Stack):
+class CalendarSyncStack(Stack):
     def __init__(
             self,
             scope: Construct,
             construct_id: str,
             bucket: s3.Bucket,
             distribution: cf.Distribution,
+            events_changed_topic: sns.Topic,
             **kwargs
     ) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        print(environ['PROJECT_NAME'])
+        function_id: str = f"{environ['PROJECT_NAME']}-calendar-sync-lambda"
+        rule_id: str = f"{environ['PROJECT_NAME']}-calendar-sync-lambda-trigger-rule"
 
-        function_id: str = f"{environ['PROJECT_NAME']}-lambda"
-        rule_id: str = f"{environ['PROJECT_NAME']}-lambda-trigger-rule"
-
-        self.lambda_function = aws_lambda.DockerImageFunction(
+        self.calendar_sync_function = aws_lambda.DockerImageFunction(
             scope=self,
             id=function_id,
-            code=aws_lambda.DockerImageCode.from_image_asset("calendar_sync"),
+            code=aws_lambda.DockerImageCode.from_image_asset(
+                "calendar_sync",
+                asset_name=function_id,
+                build_args={
+                    "tag": "v1"
+                }
+            ),
             function_name=function_id,
             log_retention=logs.RetentionDays.ONE_MONTH,
             timeout=Duration.seconds(10),
+            current_version_options=aws_lambda.VersionOptions(
+                removal_policy=RemovalPolicy.DESTROY
+            ),
             initial_policy=[
                 iam.PolicyStatement(
                     actions=[
@@ -60,9 +70,12 @@ class FuncStack(Stack):
                 "DISTRIBUTION_ID": distribution.distribution_id,
                 "BUCKET_NAME": bucket.bucket_name,
                 "EVENTS_PER_PAGE": environ["EVENTS_PER_PAGE"],
+                "EVENTS_CHANGED_TOPIC_ARN": events_changed_topic.topic_arn,
                 "TZ": environ["TZ"]
             }
         )
+
+        events_changed_topic.grant_publish(self.calendar_sync_function)
 
         self.rule = events.Rule(
             scope=self,
@@ -72,5 +85,5 @@ class FuncStack(Stack):
                 hour="0",
                 minute="0"
             ),
-            targets=[targets.LambdaFunction(handler=self.lambda_function)]
+            targets=[targets.LambdaFunction(handler=self.calendar_sync_function)]
         )

@@ -9,7 +9,7 @@ from aws_cdk import (
 class CertStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
-        certificate_id: str = f"{environ['PROJECT_NAME']}-events-distribution-cert"
+        certificate_id: str = f"{environ['PROJECT_NAME']}-calendar-sync-events-distribution-cert"
         self.certificate = cm.Certificate(
             scope=self,
             id=certificate_id,

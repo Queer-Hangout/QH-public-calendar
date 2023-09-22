@@ -15,9 +15,9 @@ class DistStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, certificate, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        distribution_id: str = f"{environ['PROJECT_NAME']}-events-distribution"
-        bucket_id: str = f"{environ['PROJECT_NAME']}-events-bucket"
-        response_headers_policy_id: str = f"{environ['PROJECT_NAME']}-events-distribution-rhp"
+        distribution_id: str = f"{environ['PROJECT_NAME']}-calendar-sync-events-distribution"
+        bucket_id: str = f"{environ['PROJECT_NAME']}-calendar-sync-events-bucket"
+        response_headers_policy_id: str = f"{environ['PROJECT_NAME']}-calendar-sync-events-distribution-rhp"
 
         self.bucket = s3.Bucket(
             scope=self,

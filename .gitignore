@@ -8,6 +8,8 @@ __pycache__/
 cdk.out
 function_out.json
 
+**/build.zip
+
 # C extensions
 *.so
 
