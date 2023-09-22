@@ -6,6 +6,11 @@ RUN yum update -y && \
 
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
+
+COPY model ./model
+RUN pip install -r model/requirements.txt
+
+COPY __init__.py ./
 COPY handler.py ./
 
 CMD ["handler.handler"]

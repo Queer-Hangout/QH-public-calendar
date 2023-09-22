@@ -21,12 +21,17 @@ https://events.api.queerhangout.no
   "per-page": integer,
   "events": [
     {
-      "name": string,
-      "description": string,
+      "uid": string,
       "start": string,
       "end": string,
       "duration": string,
+      "created": string,
+      "name": string,
+      "summary": string,
+      "description": string,
       "location": string
+      "rrule": string
+      "status": string
     }
   ]
 }
@@ -47,12 +52,17 @@ https://events.api.queerhangout.no
   "has-more": boolean,
   "events": [
     {
-      "name": string,
-      "description": string,
+      "uid": string,
       "start": string,
       "end": string,
       "duration": string,
+      "created": string,
+      "name": string,
+      "summary": string,
+      "description": string,
       "location": string
+      "rrule": string
+      "status": string
     }
   ]
 }
@@ -70,6 +80,7 @@ Thw following must be installed on your machine:
 - [AWS CDK v2.86.0](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html) (Install by running
 `npm install -g aws-cdk@2.86.0`)
 - [Docker](https://www.docker.com/)
+- Terminal supporting Shell scripts
 
 ### Environment variables
 
@@ -93,6 +104,9 @@ DOMAIN_NAME=events.api.queerhangout.no
 
 # (Required) The CORS allowed domain, i.e. the domain of the frontend which will be fetching data from the distribution
 CORS_ALLOWED_DOMAIN=https://queerhangout.no
+
+# (Required) The webhook for the Discord channel which to send notifications
+DISCORD_WEBHOOK_URL=
 
 # (Optional) Whether a secondary domain should be allowed. Must be either "True" or "False". (default: False)
 ENABLE_CORS_ALLOWED_SECONDARY_DOMAIN=True
