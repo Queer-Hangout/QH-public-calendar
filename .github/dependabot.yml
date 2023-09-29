@@ -25,3 +25,7 @@ updates:
     directory: "/discord_notify" # Location of package manifests
     schedule:
       interval: "weekly"
+  - package-ecosystem: "pip" # See documentation for possible values
+    directory: "/daily_event" # Location of package manifests
+    schedule:
+      interval: "weekly"
