@@ -6,6 +6,7 @@ from cdk.dist_stack import DistStack
 from cdk.calendar_sync_stack import CalendarSyncStack
 from cdk.calendar_diff_stack import CalendarDiffStack
 from cdk.discord_notify_stack import DiscordNotifyStack
+from cdk.daily_event_stack import DailyEventStack
 from configure import configure_env
 
 configure_env()
@@ -21,18 +22,6 @@ calendar_diff_stack = CalendarDiffStack(
     env=cdk.Environment(account=account, region=default_region)
 )
 
-# Subscribes to any event changes from calendar_diff, and posts them to a Discord channel
-discord_notify_stack = DiscordNotifyStack(
-    app, "DiscordNotifyStack",
-    sns_topics=[
-        calendar_diff_stack.new_event_topic,
-        calendar_diff_stack.updated_event_topic,
-        calendar_diff_stack.deleted_event_topic
-    ],
-    env=cdk.Environment(account=account, region=default_region)
-)
-discord_notify_stack.add_dependency(calendar_diff_stack)
-
 # Certificate for CloudFront distribution
 cert_stack = CertStack(app, "CertStack", env=cdk.Environment(account=account, region="us-east-1"),
                        cross_region_references=True)
@@ -42,6 +31,30 @@ dist_stack = DistStack(app, "DistStack", cross_region_references=True,
                        env=cdk.Environment(account=account, region=default_region),
                        certificate=cert_stack.certificate)
 dist_stack.add_dependency(cert_stack)
+
+
+# Runs once a day and notifies of events one day before
+daily_event_stack = DailyEventStack(
+    app, "DailyEventStack",
+    env=cdk.Environment(account=account, region=default_region),
+    events_bucket=dist_stack.bucket
+)
+daily_event_stack.add_dependency(dist_stack)
+
+# Subscribes to any event changes from calendar_diff, and posts them to a Discord channel
+discord_notify_stack = DiscordNotifyStack(
+    app, "DiscordNotifyStack",
+    sns_topics=[
+        calendar_diff_stack.new_event_topic,
+        calendar_diff_stack.updated_event_topic,
+        calendar_diff_stack.deleted_event_topic,
+        daily_event_stack.daily_event_topic
+    ],
+    env=cdk.Environment(account=account, region=default_region)
+)
+discord_notify_stack.add_dependency(calendar_diff_stack)
+discord_notify_stack.add_dependency(daily_event_stack)
+
 
 # Pulls the source calendar and processes the data into json format, distributing it to CloudFront.
 # Notifies about any changes to the calendar, so that the changes may be processed by calendar_diff

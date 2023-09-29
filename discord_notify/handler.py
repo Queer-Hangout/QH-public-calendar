@@ -149,10 +149,28 @@ def process_updated_event_message(message: dict):
     return send_message_to_discord(content)
 
 
+def process_event_is_tomorrow_message(message: dict):
+    location_line: str = f"\n**Sted:** {message['event']['location']}" if message['event']['location'] != "" else ""
+    rrule_line: str = f"\n**Gjentakelse:** {message['event']['rrule']}" if message['event']['rrule'] != "" else ""
+    content: str = f"@here" \
+                   f"\n:calendar_spiral: Påminnelse: Arrangement i morgen :calendar_spiral:" \
+                   f"\n" \
+                   f"\n**{message['event']['summary']}**" \
+                   f"\n" \
+                   f"\n**Tid:** {build_time_string(message['event']['start'], message['event']['end'])}" \
+                   f"{location_line}" \
+                   f"{rrule_line}" \
+                   f"\n" \
+                   f"\n{html_parser.handle(message['event']['description'])}"
+    content = truncate_content(content, 2000)
+    return send_message_to_discord(content)
+
+
 message_handlers = {
     "new_calendar_event": process_new_event_message,
     "updated_calendar_event": process_updated_event_message,
-    "deleted_calendar_event": process_deleted_event_message
+    "deleted_calendar_event": process_deleted_event_message,
+    "event_is_tomorrow": process_event_is_tomorrow_message
 }
 
 
