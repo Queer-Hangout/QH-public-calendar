@@ -1,9 +1,9 @@
+import rrule_parser.rrule_parser as rrule_parser
 from discord_webhook import DiscordWebhook
 from os import environ
 import json
 from datetime import datetime
 from html2text import HTML2Text
-
 
 webhook_url: str = environ["DISCORD_WEBHOOK_URL"]
 html_parser = HTML2Text()
@@ -57,7 +57,13 @@ def truncate_content(content: str, max_length: int) -> str:
 
 def process_new_event_message(message: dict):
     location_line: str = f"\n**Sted:** {message['event']['location']}" if message['event']['location'] != "" else ""
-    rrule_line: str = f"\n**Gjentakelse:** {message['event']['rrule']}" if message['event']['rrule'] != "" else ""
+    rrule_str: str = ""
+    if message['event']['rrule'] != "":
+        try:
+            rrule_str = rrule_parser.from_ical(message['event']['rrule'])
+        except Exception:
+            rrule_str = message['event']['rrule']
+    rrule_line: str = f"\n**Gjentakelse:** {rrule_str}" if rrule_str != "" else ""
     content: str = f":calendar_spiral: Et nytt arrangement har blitt opprettet :calendar_spiral:" \
                    f"\n" \
                    f"\n**{message['event']['summary']}**" \
@@ -74,7 +80,15 @@ def process_new_event_message(message: dict):
 
 def process_deleted_event_message(message: dict):
     location_line: str = f"\n~~**Sted:** {message['event']['location']}~~" if message['event']['location'] != "" else ""
-    rrule_line: str = f"~~\n**Gjentakelse:** {message['event']['rrule']}~~" if message['event']['rrule'] != "" else ""
+
+    rrule_str: str = ""
+    if message['event']['rrule'] != "":
+        try:
+            rrule_str = rrule_parser.from_ical(message['event']['rrule'])
+        except Exception:
+            rrule_str = message['event']['rrule']
+    rrule_line: str = f"~~\n**Gjentakelse:** {rrule_str}~~" if rrule_str != "" else ""
+
     content: str = f":calendar_spiral: Et arrangement har blitt slettet :calendar_spiral:" \
                    f"\n" \
                    f"\n**{message['event']['summary']}**" \
@@ -125,9 +139,23 @@ def process_updated_event_message(message: dict):
     if old_event['location'] != "" or new_event['location'] != "":
         location_line = f"\n**Sted:** {location_line}"
 
-    rrule_line: str = new_event['rrule']
+    new_rrl: str = new_event['rrule']
+    if new_rrl != "":
+        try:
+            new_rrl = rrule_parser.from_ical(new_rrl)
+        except Exception:
+            pass
+
+    old_rrl: str = old_event['rrule']
+    if old_rrl != "":
+        try:
+            old_rrl = rrule_parser.from_ical(old_rrl)
+        except Exception:
+            pass
+
+    rrule_line: str = new_rrl
     if old_event['rrule'] != "" and old_event['rrule'] != new_event['rrule']:
-        rrule_line = f"~~{old_event['rrule']}~~ {rrule_line}"
+        rrule_line = f"~~{old_rrl}~~ {rrule_line}"
     if old_event['rrule'] != "" or new_event['rrule'] != "":
         rrule_line = f"\n**Gjentakelse:** {rrule_line}"
 
@@ -151,7 +179,15 @@ def process_updated_event_message(message: dict):
 
 def process_event_is_tomorrow_message(message: dict):
     location_line: str = f"\n**Sted:** {message['event']['location']}" if message['event']['location'] != "" else ""
-    rrule_line: str = f"\n**Gjentakelse:** {message['event']['rrule']}" if message['event']['rrule'] != "" else ""
+
+    rrl: str = message['event']['rrule']
+    if rrl != "":
+        try:
+            rrl = rrule_parser.from_ical(rrl)
+        except Exception:
+            pass
+
+    rrule_line: str = f"\n**Gjentakelse:** {rrl}" if message['event']['rrule'] != "" else ""
     content: str = f"@here" \
                    f"\n:calendar_spiral: Påminnelse: Arrangement i morgen :calendar_spiral:" \
                    f"\n" \
