@@ -2,9 +2,6 @@ import json
 import boto3
 from os import environ
 from datetime import datetime, timedelta
-from configure import configure_env
-
-configure_env()
 
 sns_client = boto3.client('sns')
 s3_client = boto3.client('s3')
