@@ -40,6 +40,7 @@ https://events.api.queerhangout.no
 ### `GET /pages/{number}.json`
 
 #### Returns
+
 ```
 {
   "source-url": string,
@@ -73,12 +74,13 @@ https://events.api.queerhangout.no
 ### Install the prerequisites
 
 Thw following must be installed on your machine:
+
 - [Node.js v18.16.1](https://nodejs.org/en/download) (Install by running `source setup-node.sh`)
 - [Python v3.9](https://www.python.org/)
 - [PIP](https://pypi.org/project/pip/)
 - [AWS cli v2.13.1](https://aws.amazon.com/cli/)
 - [AWS CDK v2.86.0](https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html) (Install by running
-`npm install -g aws-cdk@2.86.0`)
+  `npm install -g aws-cdk@2.86.0`)
 - [Docker](https://www.docker.com/)
 - Terminal supporting Shell scripts
 
@@ -133,6 +135,7 @@ Run `pip install -r requirements.txt`
 ### Bootstrapping for CloudFormation
 
 Run
+
 - `cdk bootstrap aws://ACCOUNT-NUMBER/us-east-1`.
 - `cdk bootstrap aws://ACCOUNT-NUMBER/eu-north-1`.
 
@@ -145,6 +148,7 @@ Before deploying you need to make sure Docker is installed and running on your m
 ### Deploy to AWS
 
 Run
+
 - `cdk synth`
 - `cdk deploy --all`
 
@@ -158,10 +162,10 @@ certificate by e-mail.
 When the `CdkStack` stack has completed its deployment, it should print its distribution domain name as an output,
 and it will look something like this:
 
-````
+```
 Outputs:
 CdkStack.distributiondomainname = xxx.cloudfront.net
-````
+```
 
 Through the domain provider, add a CNAME record for the domain name for the distribution, and point it to the cloudfront
 url from the distribution output.
@@ -181,4 +185,4 @@ be exported once every 24 hours, processed into a list of events in JSON format 
 CloudFront distribution will be created from this S3 bucket to reduce costs of requests. The website may then fetch a
 list of events directly from the CloudFront distribution.
 
-![Architecture diagram](images/diagram.png)
+![Architecture diagram](images/calendar-sync.drawio.png)
